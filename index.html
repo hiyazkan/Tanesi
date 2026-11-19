@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#06452F" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TANESİ" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <title>TANESİ – Zikir ve Tesbih Uygulaması</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #06452F;
+      --secondary: #0B593D;
+      --gold: #D6A83D;
+      --cream: #FFF4D8;
+      --bg: #F8EED8;
+      --card: #FFFDF7;
+      --text: #102A20;
+      --text-muted: #4E6B5E;
+      --border: rgba(214, 168, 61, 0.45);
+      --shadow: 0 6px 20px rgba(6, 69, 47, 0.08);
+      --font-scale: 1;
+    }
+    [data-theme="dark"] {
+      --bg: #04291C;
+      --card: #083B29;
+      --cream: #0B4B34;
+      --text: #F8EED8;
+      --text-muted: #B6CEBF;
+      --border: rgba(214, 168, 61, 0.35);
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: calc(15px * var(--font-scale));
+      min-height: 100vh;
+      padding-bottom: 92px;
+      background-image: radial-gradient(rgba(214, 168, 61, 0.14) 1px, transparent 1px),
+                        radial-gradient(rgba(6, 69, 47, 0.06) 1px, var(--bg) 1px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      transition: background-color 0.25s, color 0.25s;
+    }
+    .arabic {
+      font-family: 'Amiri', serif;
+      direction: rtl;
+      line-height: 1.95;
+      font-weight: 700;
+    }
+    .app-shell {
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
+    }
+    /* Header */
+    .hero-header {
+      background: linear-gradient(155deg, #06452F 0%, #0B593D 100%);
+      color: #FFF4D8;
+      padding: 20px 20px 26px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      border-bottom: 2px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(6, 69, 47, 0.25);
+    }
+    .mosque-bg {
+      position: absolute;
+      right: -10px;
+      bottom: -6px;
+      width: 210px;
+      height: 120px;
+      opacity: 0.14;
+      pointer-events: none;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: rgba(255, 244, 216, 0.12);
+      border: 1.5px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 12px rgba(214, 168, 61, 0.25);
+    }
+    .brand-title h1 {
+      font-size: 1.35rem;
+      letter-spacing: 2px;
+      color: #FFF4D8;
+      font-weight: 700;
+    }
+    .brand-title p {
+      font-size: 0.78rem;
+      color: #D6A83D;
+      font-weight: 500;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 244, 216, 0.12);
+      border: 1px solid rgba(214, 168, 61, 0.45);
+      color: #FFF4D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .verse-banner {
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: rgba(255, 244, 216, 0.08);
+      border: 1px solid rgba(214, 168, 61, 0.35);
+      border-radius: 14px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: #FFF4D8;
+      position: relative;
+      z-index: 2;
+    }
+    .daily-summary-bar {
+      margin-top: 14px;
+      position: relative;
+      z-index: 2;
+    }
+    .summary-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+      color: #EAD8B1;
+    }
+    .progress-track {
+      height: 8px;
+      background: rgba(0, 0, 0, 0.28);
+      border-radius: 99px;
+      overflow: hidden;
+      border: 1px solid rgba(214, 168, 61, 0.3);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #D6A83D, #F2CF7E);
+      border-radius: 99px;
+      transition: width 0.35s ease;
+    }
+
+    /* Sections & Cards */
+    .content-area { padding: 16px; }
+    .view { display: none; }
+    .view.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 10px;
+    }
+    .section-head h2 {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    [data-theme="dark"] .section-head h2 { color: var(--gold); }
+    .badge-pill {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: rgba(214, 168, 61, 0.18);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .dhikr-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 11px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.2s;
+      position: relative;
+    }
+    .dhikr-card:active { transform: scale(0.985); }
+    .dhikr-card.completed {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, var(--card) 0%, rgba(214, 168, 61, 0.12) 100%);
+    }
+    .dhikr-info { flex: 1; min-width: 0; }
+    .dhikr-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .dhikr-title {
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--text);
+    }
+    .dhikr-arabic {
+      font-size: calc(1.32rem * var(--font-scale));
+      color: var(--primary);
+      margin: 4px 0;
+      text-align: right;
+    }
+    [data-theme="dark"] .dhikr-arabic { color: #F5D687; }
+    .dhikr-translit {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .dhikr-note {
+      font-size: 0.76rem;
+      color: #9C721B;
+      margin-top: 3px;
+      font-style: italic;
+    }
+    [data-theme="dark"] .dhikr-note { color: var(--gold); }
+
+    .ring-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .ring-svg { width: 52px; height: 52px; transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: rgba(214, 168, 61, 0.22); stroke-width: 4.5; }
+    .ring-fg { fill: none; stroke: var(--gold); stroke-width: 4.5; stroke-linecap: round; transition: stroke-dashoffset 0.3s; }
+    .ring-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* Weekly Featured Card */
+    .weekly-box {
+      background: linear-gradient(145deg, #06452F, #0B593D);
+      color: #FFF4D8;
+      border: 1.5px solid var(--gold);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+    .weekly-top-motto {
+      text-align: center;
+      font-size: 1.25rem;
+      color: #F5D687;
+      border-bottom: 1px solid rgba(214, 168, 61, 0.3);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .day-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+    .day-pills::-webkit-scrollbar { display: none; }
+    .day-pill {
+      padding: 5px 11px;
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      border: 1px solid rgba(214, 168, 61, 0.4);
+      background: rgba(255, 244, 216, 0.08);
+      color: #FFF4D8;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .day-pill.active {
+      background: var(--gold);
+      color: #06452F;
+      border-color: var(--gold);
+    }
+
+    /* Special Dhikr Card */
+    .special-card {
+      background: var(--card);
+      border: 1.5px solid var(--gold);
+      border-radius: 20px;
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+    .special-card .arabic {
+      font-size: calc(1.65rem * var(--font-scale));
+      color: var(--primary);
+      margin: 8px 0;
+    }
+    [data-theme="dark"] .special-card .arabic { color: #F5D687; }
+
+    /* Counter Modal */
+    .counter-modal {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .counter-modal.open { display: flex; }
+    .counter-header {
+      background: var(--primary);
+      color: #FFF4D8;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid var(--gold);
+    }
+    .counter-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 26px;
+      overflow-y: auto;
+      text-align: center;
+    }
+    .counter-text-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      box-shadow: var(--shadow);
+    }
+    .counter-arabic {
+      font-size: calc(1.75rem * var(--font-scale));
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    [data-theme="dark"] .counter-arabic { color: #F5D687; }
+    .counter-translit {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .counter-meaning {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .tasbih-btn-wrap {
+      position: relative;
+      width: 224px;
+      height: 224px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .tasbih-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .tasbih-tap-btn {
+      width: 182px;
+      height: 182px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #0E6B4A, #06452F);
+      border: 3px solid var(--gold);
+      color: #FFF4D8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 14px 32px rgba(6, 69, 47, 0.35), inset 0 2px 10px rgba(255, 244, 216, 0.25);
+      transition: transform 0.08s ease;
+      user-select: none;
+    }
+    .tasbih-tap-btn:active { transform: scale(0.95); }
+    .tasbih-tap-btn.celebrate {
+      animation: goldPulse 0.8s ease;
+      box-shadow: 0 0 36px rgba(214, 168, 61, 0.85);
+    }
+    @keyframes goldPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+    .count-big { font-size: 3rem; font-weight: 700; line-height: 1.05; color: #FFF4D8; }
+    .count-target { font-size: 0.86rem; color: var(--gold); margin-top: 4px; font-weight: 600; }
+    .counter-controls {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      justify-content: center;
+    }
+    .ctrl-btn {
+      flex: 1;
+      max-width: 115px;
+      padding: 10px 8px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Stats & Settings */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    [data-theme="dark"] .stat-val { color: var(--gold); }
+    .stat-lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .cal-cell {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+    .cal-cell.done { background: var(--primary); color: #FFF4D8; border-color: var(--gold); }
+    .cal-cell.partial { background: rgba(214, 168, 61, 0.25); }
+
+    .setting-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .btn-gold {
+      background: var(--primary);
+      color: #FFF4D8;
+      border: 1.5px solid var(--gold);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    /* Sheet Modal for Levha */
+    .levha-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .levha-modal.open { display: flex; }
+    .levha-sheet {
+      background: #FFFDF7;
+      color: #102A20;
+      border: 3px double #06452F;
+      outline: 2px solid #D6A83D;
+      border-radius: 14px;
+      max-width: 460px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 18px;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 520px;
+      background: #06452F;
+      border-top: 2px solid var(--gold);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 8px 4px 10px;
+      z-index: 90;
+      box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.18);
+    }
+    .nav-item {
+      background: none;
+      border: none;
+      color: rgba(255, 244, 216, 0.68);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-item.active { color: var(--gold); }
+    .toast {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #06452F;
+      color: #FFF4D8;
+      border: 1.5px solid var(--gold);
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      z-index: 200;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+    }
+  </style>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="hero-header">
+      <svg class="mosque-bg" viewBox="0 0 240 140" fill="currentColor">
+        <path d="M20 140V65h8v75h-8zm4-92l-6 17h12l-6-17zm188 92V65h8v75h-8zm4-92l-6 17h12l-6-17zM65 140V92c0-26 24-44 55-44s55 18 55 44v48H65zm55-112c-4 8-6 14-6 20h12c0-6-2-12-6-20zm58-12a16 16 0 1 0 12 26 13 13 0 1 1-12-26z"/>
+      </svg>
+      <div class="top-bar">
+        <div class="brand">
+          <div class="logo-badge">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="11" stroke="#D6A83D" stroke-width="1.8" stroke-dasharray="3 2.5"/>
+              <circle cx="16" cy="5" r="2.3" fill="#FFF4D8"/>
+              <path d="M16 10c-3.3 0-6 2.7-6 6s2.7 6 6 6c1.5 0 2.9-.6 3.9-1.5-2.6-.3-4.6-2.5-4.6-5.2s2-4.9 4.6-5.2A5.9 5.9 0 0 0 16 10z" fill="#D6A83D"/>
+            </svg>
+          </div>
+          <div class="brand-title">
+            <h1>TANESİ</h1>
+            <p>Zikir ve Tesbih Uygulaması</p>
+          </div>
+        </div>
+        <button class="icon-btn" onclick="switchTab('settings')" aria-label="Ayarlar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="verse-banner">
+        “Allah’ı zikreden kalpler huzur bulur.”
+      </div>
+
+      <div class="daily-summary-bar">
+        <div class="summary-meta">
+          <span id="todayDateLabel">Bugünkü Vird İlerlemesi</span>
+          <span id="dailyTotalLabel">0 / 1.400 (%0)</span>
+        </div>
+        <div class="progress-track">
+          <div id="dailyProgressBar" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content-area">
+      <!-- TAB 1: HOME -->
+      <section id="view-home" class="view active">
+        <div class="section-head">
+          <h2>Bölüm A • Günlük Virdlerim</h2>
+          <span class="badge-pill" id="virdGoalBadge">Hedef: 1.400</span>
+        </div>
+        <div id="dailyVirdsList"></div>
+
+        <div class="section-head">
+          <h2>Bölüm B • Haftanın Günlük Tesbihi</h2>
+          <span class="badge-pill" id="activeDayBadge">Bugün</span>
+        </div>
+        <div class="weekly-box">
+          <div class="arabic weekly-top-motto">لِكُلِّ شَيْءٍ شِفَاءٌ وَشِفَاءُ الْقُلُوبِ ذِكْرُ اللّٰهِ</div>
+          <div class="day-pills" id="dayPills"></div>
+          <div id="selectedWeeklyCard"></div>
+        </div>
+
+        <div class="section-head">
+          <h2>Bölüm C • Günlük Virdlere Ek Tesbihler</h2>
+          <button class="badge-pill" style="cursor:pointer" onclick="openLevhaModal()">Levha Görünümü</button>
+        </div>
+        <div id="extraDhikrsList"></div>
+
+        <div class="section-head">
+          <h2>Bölüm D • Özel Zikir</h2>
+          <span class="badge-pill">100 Tekrar</span>
+        </div>
+        <div id="specialDhikrSlot"></div>
+      </section>
+
+      <!-- TAB 2: STATS -->
+      <section id="view-stats" class="view">
+        <div class="section-head">
+          <h2>Zikir İstatistikleri</h2>
+          <span class="badge-pill" id="statsDateBadge">Canlı Kayıt</span>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-val" id="statTodayCount">0</div>
+            <div class="stat-lbl">Bugün Tamamlanan Zikir</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statDailyPct">%0</div>
+            <div class="stat-lbl">Günlük Vird Hedefi</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statWeekTotal">0</div>
+            <div class="stat-lbl">Haftalık Toplam Tekrar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statMonthTotal">0</div>
+            <div class="stat-lbl">Aylık Toplam Tekrar</div>
+          </div>
+        </div>
+
+        <div class="stat-card" style="margin-bottom:12px;">
+          <div style="font-weight:700; margin-bottom:6px;">Son 14 Gün Devamlılık Takvimi</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">Koyu yeşil: Günlük vird tamamlandı • Altın: Kısmi zikir</div>
+          <div class="cal-grid" id="streakCalendar"></div>
+        </div>
+
+        <div class="stat-card" style="margin-bottom:12px;">
+          <div style="font-weight:700; margin-bottom:8px;">Haftanın Günlük Tesbih Durumu</div>
+          <div id="weeklyStatsList"></div>
+        </div>
+
+        <div class="stat-card">
+          <div style="font-weight:700; margin-bottom:8px;">En Çok Yapılan Zikirler</div>
+          <div id="topDhikrsList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LISTEM -->
+      <section id="view-list" class="view">
+        <div class="section-head">
+          <h2>Tüm Zikirler ve Tesbihler</h2>
+          <span class="badge-pill">4 Kategori</span>
+        </div>
+        <div id="fullCatalogContainer"></div>
+      </section>
+
+      <!-- TAB 4: NOTIFICATIONS -->
+      <section id="view-notifs" class="view">
+        <div class="section-head">
+          <h2>Zikir Hatırlatıcıları</h2>
+          <span class="badge-pill" id="notifStatusPill">Aktif</span>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Sabah Vird Hatırlatması</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Sabah namazı sonrası günlük virdler</div>
+          </div>
+          <input type="time" id="morningTime" value="07:30" onchange="saveSettings()" style="padding:6px; border-radius:8px; border:1px solid var(--border);">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Akşam Tesbih Hatırlatması</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Günün tesbihi ve eksik vird kontrolü</div>
+          </div>
+          <input type="time" id="eveningTime" value="21:00" onchange="saveSettings()" style="padding:6px; border-radius:8px; border:1px solid var(--border);">
+        </div>
+        <div class="stat-card" style="margin-top:12px;">
+          <div style="font-weight:700; margin-bottom:6px;">Cihaz Bildirim İzni</div>
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:10px;">Android telefonunuza ana ekrana ekledikten sonra hatırlatıcı bildirimleri alabilirsiniz.</p>
+          <button class="btn-gold" onclick="requestNotifPermission()">Bildirim İznini Etkinleştir</button>
+        </div>
+      </section>
+
+      <!-- TAB 5: SETTINGS -->
+      <section id="view-settings" class="view">
+        <div class="section-head">
+          <h2>Uygulama Ayarları</h2>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Sayaç Sesi (Tesbih Tanesi)</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Her dokunuşta yumuşak ahşap tık sesi</div>
+          </div>
+          <input type="checkbox" id="optSound" onchange="saveSettings()" style="width:20px; height:20px;">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Titreşim Geri Bildirimi</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Android cihazlarda dokunsal titreşim</div>
+          </div>
+          <input type="checkbox" id="optVibrate" onchange="saveSettings()" style="width:20px; height:20px;">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Tema Görünümü</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Açık Parşömen / Koyu Zümrüt</div>
+          </div>
+          <select id="optTheme" onchange="saveSettings()" style="padding:6px 10px; border-radius:10px; border:1px solid var(--border);">
+            <option value="light">Açık Parşömen</option>
+            <option value="dark">Koyu Zümrüt</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Yazı ve Hat Büyüklüğü</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Arapça hat ve Türkçe okunuş ölçeği</div>
+          </div>
+          <select id="optFontScale" onchange="saveSettings()" style="padding:6px 10px; border-radius:10px; border:1px solid var(--border);">
+            <option value="0.95">Normal</option>
+            <option value="1.1">Büyük</option>
+            <option value="1.25">Çok Büyük</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div style="font-weight:700;">Veri Yedekleme & Geri Yükleme</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Tüm zikir geçmişinizi JSON olarak indirin</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-gold" onclick="exportBackup()">Yedekle</button>
+            <label class="btn-gold" style="cursor:pointer;">
+              Yükle<input type="file" accept=".json" onchange="importBackup(event)" style="display:none;">
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- DIGITAL TASBIH COUNTER MODAL -->
+  <div id="counterModal" class="counter-modal">
+    <div class="counter-header">
+      <button class="icon-btn" onclick="closeCounter()" aria-label="Geri">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div style="font-weight:700; font-size:0.96rem;" id="modalDhikrCategory">Dijital Tesbih</div>
+      <button class="icon-btn" onclick="editCurrentTarget()" aria-label="Hedef Düzenle" title="Hedefi Düzenle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+    </div>
+
+    <div class="counter-body">
+      <div class="counter-text-box">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--gold); margin-bottom:4px;" id="modalDhikrTitle"></div>
+        <div class="arabic counter-arabic" id="modalDhikrArabic"></div>
+        <div class="counter-translit" id="modalDhikrTranslit"></div>
+        <div class="counter-meaning" id="modalDhikrMeaning"></div>
+      </div>
+
+      <div class="tasbih-btn-wrap">
+        <svg class="tasbih-ring" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="98" fill="none" stroke="rgba(214, 168, 61, 0.22)" stroke-width="8"/>
+          <circle id="modalRingProgress" cx="110" cy="110" r="98" fill="none" stroke="#D6A83D" stroke-width="8" stroke-linecap="round" stroke-dasharray="615.75" stroke-dashoffset="615.75"/>
+        </svg>
+        <button id="tasbihTapBtn" class="tasbih-tap-btn" onclick="incrementDhikr()">
+          <span class="count-big" id="modalCount">0</span>
+          <span class="count-target" id="modalTargetLabel">/ 100</span>
+          <span style="font-size:0.72rem; margin-top:6px; opacity:0.82;" id="modalPctLabel">%0</span>
+        </button>
+      </div>
+
+      <div class="counter-controls">
+        <button class="ctrl-btn" onclick="decrementDhikr()">
+          <span>↩ Geri Al</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">-1</span>
+        </button>
+        <button class="ctrl-btn" onclick="toggleQuickSound()">
+          <span id="quickSoundLabel">🔊 Ses Açık</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">Dokunuş</span>
+        </button>
+        <button class="ctrl-btn" onclick="resetCurrentDhikr()">
+          <span style="color:#B42318;">↺ Sıfırla</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">Onaylı</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORİJİNAL LEVHA MODAL -->
+  <div id="levhaModal" class="levha-modal" onclick="if(event.target===this) closeLevhaModal()">
+    <div class="levha-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #D6A83D; padding-bottom:8px; margin-bottom:12px;">
+        <strong style="color:#06452F;">Ayrıca: Günlük Virdlere Ek Tesbihler Levhası</strong>
+        <button onclick="closeLevhaModal()" style="background:#06452F; color:#FFF4D8; border:none; border-radius:8px; padding:4px 10px; cursor:pointer;">Kapat</button>
+      </div>
+      <div id="levhaContent" style="display:flex; flex-direction:column; gap:14px;"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span>Ana Sayfa</span>
+    </button>
+    <button class="nav-item" data-tab="stats" onclick="switchTab('stats')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>İstatistik</span>
+    </button>
+    <button class="nav-item" data-tab="list" onclick="switchTab('list')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1"/><circle cx="3" cy="12" r="1"/><circle cx="3" cy="18" r="1"/></svg>
+      <span>Listem</span>
+    </button>
+    <button class="nav-item" data-tab="notifs" onclick="switchTab('notifs')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Bildirimler</span>
+    </button>
+    <button class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Ayarlar</span>
+    </button>
+  </nav>
+
+  <script>
+    const DHIKRS = [
+      // BÖLÜM A: GÜNLÜK VİRDLERİM (1400)
+      { id: 'vird_1', cat: 'daily', title: '1. İstiğfar', arabic: 'أَسْتَغْفِرُ اللّٰهَ الْعَظِيمَ', translit: 'Estağfirullah el-Azîm', meaning: 'Yüce Allah’tan bağışlanma dilerim.', defaultTarget: 100 },
+      { id: 'vird_2', cat: 'daily', title: '2. Lâ ilâhe illallah', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ', translit: 'Lâ ilâhe illallah', meaning: 'Allah’tan başka ilah yoktur.', defaultTarget: 100 },
+      { id: 'vird_3', cat: 'daily', title: '3. Salât-ı Şerife', arabic: 'اللّٰهُمَّ صَلِّ عَلَى مُحَمَّدٍ', translit: 'Allahümme salli alâ Muhammed', meaning: 'Allah’ım, Efendimiz Muhammed’e salât eyle.', defaultTarget: 100 },
+      { id: 'vird_4', cat: 'daily', title: '4. İhlâs-ı Şerif', arabic: 'قُلْ هُوَ اللّٰهُ أَحَدٌ', translit: 'Kul hüvallahü ehad', meaning: 'De ki: O Allah birdir.', defaultTarget: 100 },
+      { id: 'vird_5', cat: 'daily', title: '5. Lafza-i Celâl (Allah)', arabic: 'اللّٰهُ', translit: 'Allah', note: 'Hafifçe dilinle söyle.', meaning: 'Cenâb-ı Hakk’ın ism-i celâli.', defaultTarget: 1000 },
+
+      // BÖLÜM B: HAFTANIN GÜNLÜK TESBİHİ
+      { id: 'week_1', cat: 'weekly', dayIndex: 1, dayName: 'Pazartesi', title: 'Pazartesi Günü Tesbihi', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ عَزِيزٌ جَلِيلٌ يَا عَزِيزُ يَا جَلِيلُ', translit: 'Lâ ilâhe illallah Azîzün Celîl, yâ Azîzü yâ Celîl.', meaning: 'İzzet ve celâl sahibi Allah’tan başka ilah yoktur.', defaultTarget: 100 },
+      { id: 'week_2', cat: 'weekly', dayIndex: 2, dayName: 'Salı', title: 'Salı Günü Tesbihi', arabic: 'اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ وَسَلِّمْ تَسْلِيمًا كَثِيرًا', translit: 'Allahümme salli alâ Muhammedin ve alâ âli Muhammedin ve sellim teslîmen kesîrâ.', meaning: 'Allah’ım, Muhammed’e ve âline çokça salât ve selâm eyle.', defaultTarget: 100 },
+      { id: 'week_3', cat: 'weekly', dayIndex: 3, dayName: 'Çarşamba', title: 'Çarşamba Günü Tesbihi', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ خَالِصًا مُخْلِصًا', translit: 'Lâ ilâhe illallah hâlisan muhlisâ.', meaning: 'İhlasla ve samimiyetle ikrar ederim ki Allah’tan başka ilah yoktur.', defaultTarget: 100 },
+      { id: 'week_4', cat: 'weekly', dayIndex: 4, dayName: 'Perşembe', title: 'Perşembe Günü Tesbihi', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ خَالِقُ كُلِّ شَيْءٍ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ', translit: 'Lâ ilâhe illallah Hâliku külli şey’in ve hüve alâ külli şey’in kadîr.', meaning: 'Her şeyin yaratıcısı olan Allah’tan başka ilah yoktur ve O her şeye kadirdir.', defaultTarget: 100 },
+      { id: 'week_5', cat: 'weekly', dayIndex: 5, dayName: 'Cuma', title: 'Cuma Günü Tesbihi', arabic: 'سُبْحَانَ اللّٰهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلٰهَ إِلَّا اللّٰهُ وَاللّٰهُ أَكْبَرُ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ الْعَلِيِّ الْعَظِيمِ', translit: 'Sübhânallahi velhamdülillahi ve lâ ilâhe illallahu vallahu ekber ve lâ havle ve lâ kuvvete illâ billâhil aliyyil azîm.', meaning: 'Allah’ı tesbih ederim, hamd Allah’adır, güç ve kuvvet yalnızca yüce Allah’tandır.', defaultTarget: 100 },
+      { id: 'week_6', cat: 'weekly', dayIndex: 6, dayName: 'Cumartesi', title: 'Cumartesi Günü Tesbihi', arabic: 'لَا إِلٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ', translit: 'Lâ ilâhe illâ ente sübhâneke innî küntü minez zâlimîn.', meaning: 'Senden başka ilah yoktur, seni tenzih ederim; şüphesiz ben nefsine zulmedenlerden oldum.', defaultTarget: 100 },
+      { id: 'week_0', cat: 'weekly', dayIndex: 0, dayName: 'Pazar', title: 'Pazar Günü Tesbihi', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ الْمَلِكُ الْحَقُّ الْمُبِينُ', translit: 'Lâ ilâhe illallahül Melikül Hakkul Mübin.', meaning: 'Apaçık Hak ve gerçek hükümdar olan Allah’tan başka ilah yoktur.', defaultTarget: 100 },
+
+      // BÖLÜM C: GÜNLÜK VİRDLERE EK TESBİHLER
+      { id: 'ext_1', cat: 'extra', title: 'Tevhid ve Mülk Tesbihi', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لَا يَمُوتُ بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ', translit: 'Lâ ilâhe illallâhu vahdehû lâ şerîke leh, lehü’l-mülkü ve lehü’l-hamdü, yuhyî ve yumît ve hüve hayyün lâ yemût biyedihi’l-hayr ve hüve alâ külli şey’in kadîr.', badgeText: 'Yüz defa', meaning: 'Allah tektir, ortağı yoktur; mülk ve hamd O’nundur, hayır O’nun elindedir.', defaultTarget: 100 },
+      { id: 'ext_2', cat: 'extra', title: 'Bâkıyât-ı Sâlihât Tesbihi', arabic: 'سُبْحَانَ اللّٰهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلٰهَ إِلَّا اللّٰهُ وَاللّٰهُ أَكْبَرُ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ الْعَلِيِّ الْعَظِيمِ', translit: 'Sübhânallahi velhamdülillahi ve lâ ilâhe illallahu vallahu ekber ve lâ havle ve lâ kuvvete illâ billâhil aliyyil azîm.', badgeText: 'Yüz defa', meaning: 'Tesbih, hamd, tekbir ve havkale zikri.', defaultTarget: 100 },
+      { id: 'ext_3', cat: 'extra', title: 'Tesbih ve İstiğfar', arabic: 'سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ سُبْحَانَ اللّٰهِ الْعَظِيمِ وَبِحَمْدِهِ أَسْتَغْفِرُ اللّٰهَ', translit: 'Sübhânallahi ve bihamdihî, sübhânallâhil azîm ve bihamdihî estağfirullah.', badgeText: 'Yüz defa', meaning: 'Allah’ı hamdi ile tesbih eder, bağışlanma dilerim.', defaultTarget: 100 },
+      { id: 'ext_4', cat: 'extra', title: 'Melikül Hakkul Mübîn', arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ الْمَلِكُ الْحَقُّ الْمُبِينُ مُحَمَّدٌ رَسُولُ اللّٰهِ صَادِقُ الْوَعْدِ الْأَمِينُ', translit: 'Lâ ilâhe illallâhul Melikül Hakkul Mübin, Muhammedün Resûlullah sâdikul va’dil emîn.', badgeText: 'Yüz defa', meaning: 'Hak hükümdar Allah’tan başka ilah yoktur; Muhammed O’nun güvenilir elçisidir.', defaultTarget: 100 },
+      { id: 'ext_5', cat: 'extra', title: 'Hz. Âdem (a.s.) Duası', arabic: 'رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ', translit: 'Rabbenâ zalemnâ enfusenâ ve in lem tağfir lenâ ve terhamnâ le nekûnenne minel hâsirîn.', badgeText: 'On veya Yüz defa', meaning: 'Rabbimiz! Biz kendimize zulmettik; bizi bağışlamazsan ziyana uğrayanlardan oluruz.', defaultTarget: 10 },
+      { id: 'ext_6', cat: 'extra', title: 'Hz. Yûnus (a.s.) Münâcatı', arabic: 'لَا إِلٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ', translit: 'Lâ ilâhe illâ ente sübhâneke innî küntü minez zâlimîn.', badgeText: 'On veya Yüz defa', meaning: 'Senden başka ilah yoktur, seni tenzih ederim.', defaultTarget: 10 },
+      { id: 'ext_7', cat: 'extra', title: 'Hidâyet ve Rahmet Duası', arabic: 'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ', translit: 'Rabbenâ lâ tuziğ kulûbenâ ba’de iz hedeytenâ ve heb lenâ min ledünke rahmeh inneke entel vehhâb.', badgeText: 'On defa', meaning: 'Rabbimiz! Bizi doğru yola ilettikten sonra kalplerimizi eğriltme ve katından rahmet bağışla.', defaultTarget: 10 },
+
+      // BÖLÜM D: ÖZEL ZİKİR
+      { id: 'special_1', cat: 'special', title: 'Özel Tesbih • Mîzanda Ağır Gelen Zikir', arabic: 'سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ سُبْحَانَ اللّٰهِ الْعَظِيمِ', translit: 'Sübhânallahi ve bihamdihî, sübhânallâhil azîm.', meaning: 'Dile hafif, mîzanda ağır ve Rahmân’a sevimli iki kelime.', defaultTarget: 100 }
+    ];
+
+    const STORAGE_KEY = 'tanesi_app_v1';
+    let state = {
+      settings: { sound: true, vibrate: true, theme: 'light', fontScale: 1, morningTime: '07:30', eveningTime: '21:00' },
+      customTargets: {},
+      logs: {} // { 'YYYY-MM-DD': { dhikr_id: count } }
+    };
+    let activeDhikrId = null;
+    let selectedWeekDay = new Date().getDay();
+
+    function getTodayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = { ...state, ...parsed, settings: { ...state.settings, ...(parsed.settings || {}) } };
+        }
+      } catch (e) {}
+      const today = getTodayKey();
+      if (!state.logs[today]) state.logs[today] = {};
+      applySettingsToUI();
+    }
+
+    function persistState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getTarget(dhikr) {
+      return state.customTargets[dhikr.id] || dhikr.defaultTarget;
+    }
+
+    function getTodayCount(id) {
+      const today = getTodayKey();
+      return (state.logs[today] && state.logs[today][id]) || 0;
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.style.display = 'block';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { el.style.display = 'none'; }, 2400);
+    }
+
+    // Soft wooden bead click via Web Audio API
+    function playBeadClick(isComplete = false) {
+      if (!state.settings.sound) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = isComplete ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(isComplete ? 580 : 320, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(isComplete ? 880 : 140, ctx.currentTime + (isComplete ? 0.25 : 0.055));
+        gain.gain.setValueAtTime(0.16, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (isComplete ? 0.28 : 0.06));
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + (isComplete ? 0.29 : 0.065));
+      } catch (e) {}
+    }
+
+    function renderRing(count, target) {
+      const pct = Math.min(1, count / target);
+      const r = 21;
+      const c = 2 * Math.PI * r;
+      const offset = c * (1 - pct);
+      return `
+        <div class="ring-wrap">
+          <svg class="ring-svg" viewBox="0 0 52 52">
+            <circle class="ring-bg" cx="26" cy="26" r="${r}"/>
+            <circle class="ring-fg" cx="26" cy="26" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"/>
+          </svg>
+          <span class="ring-count">${count}/${target}</span>
+        </div>
+      `;
+    }
+
+    function createDhikrCardHTML(d) {
+      const count = getTodayCount(d.id);
+      const target = getTarget(d);
+      const done = count >= target;
+      return `
+        <div class="dhikr-card ${done ? 'completed' : ''}" onclick="openCounter('${d.id}')">
+          <div class="dhikr-info">
+            <div class="dhikr-title-row">
+              <span class="dhikr-title">${d.title}</span>
+              ${done ? '<span style="color:#D6A83D; font-weight:700;">✓</span>' : ''}
+              ${d.badgeText ? `<span class="badge-pill" style="font-size:0.68rem; padding:1px 7px;">${d.badgeText}</span>` : ''}
+            </div>
+            <div class="arabic dhikr-arabic">${d.arabic}</div>
+            <div class="dhikr-translit">${d.translit}</div>
+            ${d.note ? `<div class="dhikr-note">• ${d.note}</div>` : ''}
+          </div>
+          ${renderRing(count, target)}
+        </div>
+      `;
+    }
+
+    function renderHome() {
+      // Daily Virds
+      const dailyList = DHIKRS.filter(d => d.cat === 'daily');
+      document.getElementById('dailyVirdsList').innerHTML = dailyList.map(createDhikrCardHTML).join('');
+
+      // Overall daily progress
+      let sumDone = 0, sumGoal = 0;
+      dailyList.forEach(d => {
+        const t = getTarget(d);
+        sumGoal += t;
+        sumDone += Math.min(getTodayCount(d.id), t);
+      });
+      const pct = sumGoal ? Math.round((sumDone / sumGoal) * 100) : 0;
+      document.getElementById('virdGoalBadge').textContent = `Hedef: ${sumGoal.toLocaleString('tr-TR')}`;
+      document.getElementById('dailyTotalLabel').textContent = `${sumDone.toLocaleString('tr-TR')} / ${sumGoal.toLocaleString('tr-TR')} (%${pct})`;
+      document.getElementById('dailyProgressBar').style.width = `${pct}%`;
+
+      const daysTr = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+      const now = new Date();
+      document.getElementById('todayDateLabel').textContent = `${now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })} • ${daysTr[now.getDay()]}`;
+      document.getElementById('activeDayBadge').textContent = `Bugün: ${daysTr[now.getDay()]}`;
+
+      // Weekly Pills (Mon -> Sun order)
+      const orderedDays = [1, 2, 3, 4, 5, 6, 0];
+      document.getElementById('dayPills').innerHTML = orderedDays.map(di => {
+        const wd = DHIKRS.find(x => x.cat === 'weekly' && x.dayIndex === di);
+        return `<button class="day-pill ${selectedWeekDay === di ? 'active' : ''}" onclick="selectWeekDay(${di})">${wd.dayName}</button>`;
+      }).join('');
+
+      const activeWeekly = DHIKRS.find(x => x.cat === 'weekly' && x.dayIndex === selectedWeekDay);
+      document.getElementById('selectedWeeklyCard').innerHTML = createDhikrCardHTML(activeWeekly);
+
+      // Extra Dhikrs
+      const extraList = DHIKRS.filter(d => d.cat === 'extra');
+      document.getElementById('extraDhikrsList').innerHTML = extraList.map(createDhikrCardHTML).join('');
+
+      // Special Dhikr
+      const sp = DHIKRS.find(d => d.id === 'special_1');
+      const spCount = getTodayCount(sp.id);
+      const spTarget = getTarget(sp);
+      document.getElementById('specialDhikrSlot').innerHTML = `
+        <div class="special-card" onclick="openCounter('${sp.id}')">
+          <div style="font-size:0.8rem; font-weight:700; color:var(--gold);">${sp.title}</div>
+          <div class="arabic">${sp.arabic}</div>
+          <div style="font-size:0.88rem; font-weight:600; margin-bottom:10px;">${sp.translit}</div>
+          <span class="badge-pill">${spCount} / ${spTarget} Tamamlandı • Sayaca Geç →</span>
+        </div>
+      `;
+    }
+
+    function selectWeekDay(di) {
+      selectedWeekDay = di;
+      renderHome();
+    }
+
+    // Counter Functions
+    function openCounter(id) {
+      activeDhikrId = id;
+      const d = DHIKRS.find(x => x.id === id);
+      const catNames = { daily: 'Günlük Vird', weekly: 'Haftanın Tesbihi', extra: 'İlave Tesbih', special: 'Özel Zikir' };
+      document.getElementById('modalDhikrCategory').textContent = catNames[d.cat] || 'Dijital Tesbih';
+      document.getElementById('modalDhikrTitle').textContent = d.title;
+      document.getElementById('modalDhikrArabic').textContent = d.arabic;
+      document.getElementById('modalDhikrTranslit').textContent = d.translit;
+      document.getElementById('modalDhikrMeaning').textContent = d.meaning || '';
+      updateCounterUI();
+      document.getElementById('counterModal').classList.add('open');
+    }
+
+    function closeCounter() {
+      document.getElementById('counterModal').classList.remove('open');
+      activeDhikrId = null;
+      renderHome();
+    }
+
+    function updateCounterUI() {
+      if (!activeDhikrId) return;
+      const d = DHIKRS.find(x => x.id === activeDhikrId);
+      const count = getTodayCount(d.id);
+      const target = getTarget(d);
+      const pct = Math.min(100, Math.round((count / target) * 100));
+      const circum = 2 * Math.PI * 98;
+      const offset = circum * (1 - Math.min(1, count / target));
+
+      document.getElementById('modalCount').textContent = count;
+      document.getElementById('modalTargetLabel').textContent = `/ ${target}`;
+      document.getElementById('modalPctLabel').textContent = `%${pct}`;
+      document.getElementById('modalRingProgress').style.strokeDashoffset = offset.toFixed(1);
+      document.getElementById('quickSoundLabel').textContent = state.settings.sound ? '🔊 Ses Açık' : '🔇 Ses Kapalı';
+    }
+
+    function incrementDhikr() {
+      if (!activeDhikrId) return;
+      const today = getTodayKey();
+      if (!state.logs[today]) state.logs[today] = {};
+      const nextVal = (state.logs[today][activeDhikrId] || 0) + 1;
+      state.logs[today][activeDhikrId] = nextVal;
+      persistState();
+
+      const d = DHIKRS.find(x => x.id === activeDhikrId);
+      const target = getTarget(d);
+      const isGoal = nextVal === target;
+
+      playBeadClick(isGoal);
+      if (state.settings.vibrate && navigator.vibrate) {
+        navigator.vibrate(isGoal ? [80, 50, 120] : 22);
+      }
+      if (isGoal) {
+        const btn = document.getElementById('tasbihTapBtn');
+        btn.classList.remove('celebrate');
+        void btn.offsetWidth;
+        btn.classList.add('celebrate');
+        showToast(`Maşallah! "${d.title}" hedefi tamamlandı.`);
+      }
+      updateCounterUI();
+    }
+
+    function decrementDhikr() {
+      if (!activeDhikrId) return;
+      const today = getTodayKey();
+      const cur = (state.logs[today] && state.logs[today][activeDhikrId]) || 0;
+      if (cur > 0) {
+        state.logs[today][activeDhikrId] = cur - 1;
+        persistState();
+        updateCounterUI();
+      }
+    }
+
+    function resetCurrentDhikr() {
+      if (!activeDhikrId) return;
+      if (confirm('Bu zikrin bugünkü sayacını sıfırlamak istediğinize emin misiniz?')) {
+        const today = getTodayKey();
+        if (state.logs[today]) state.logs[today][activeDhikrId] = 0;
+        persistState();
+        updateCounterUI();
+        showToast('Sayaç sıfırlandı.');
+      }
+    }
+
+    function editCurrentTarget() {
+      if (!activeDhikrId) return;
+      const d = DHIKRS.find(x => x.id === activeDhikrId);
+      const curTarget = getTarget(d);
+      const input = prompt(`"${d.title}" için yeni hedef tekrar sayısı:`, curTarget);
+      const num = parseInt(input, 10);
+      if (!isNaN(num) && num > 0) {
+        state.customTargets[d.id] = num;
+        persistState();
+        updateCounterUI();
+        showToast(`Yeni hedef ${num} olarak güncellendi.`);
+      }
+    }
+
+    function toggleQuickSound() {
+      state.settings.sound = !state.settings.sound;
+      document.getElementById('optSound').checked = state.settings.sound;
+      persistState();
+      updateCounterUI();
+    }
+
+    // Levha Modal
+    function openLevhaModal() {
+      const extras = DHIKRS.filter(d => d.cat === 'extra');
+      document.getElementById('levhaContent').innerHTML = extras.map(e => `
+        <div style="border-bottom:1px dashed #D6A83D; padding-bottom:10px; text-align:center;">
+          <div style="text-align:right; font-size:0.75rem; font-weight:700; color:#0B593D;">${e.badgeText}</div>
+          <div class="arabic" style="font-size:1.35rem; color:#06452F;">${e.arabic}</div>
+          <div style="font-size:0.78rem; color:#4E6B5E; margin-top:4px;">${e.translit}</div>
+        </div>
+      `).join('');
+      document.getElementById('levhaModal').classList.add('open');
+    }
+    function closeLevhaModal() {
+      document.getElementById('levhaModal').classList.remove('open');
+    }
+
+    // Stats & Catalog
+    function renderStats() {
+      const today = getTodayKey();
+      const todayMap = state.logs[today] || {};
+      const todayTotal = Object.values(todayMap).reduce((a, b) => a + b, 0);
+
+      const dailyList = DHIKRS.filter(d => d.cat === 'daily');
+      let virdDone = 0, virdGoal = 0;
+      dailyList.forEach(d => {
+        const t = getTarget(d);
+        virdGoal += t;
+        virdDone += Math.min(todayMap[d.id] || 0, t);
+      });
+      const dailyPct = virdGoal ? Math.round((virdDone / virdGoal) * 100) : 0;
+
+      // Week & Month totals
+      const now = new Date();
+      let weekTotal = 0, monthTotal = 0;
+      const totalsByDhikr = {};
+
+      Object.entries(state.logs).forEach(([dateStr, map]) => {
+        const dObj = new Date(dateStr + 'T00:00:00');
+        const diffDays = (now - dObj) / (1000 * 60 * 60 * 24);
+        const daySum = Object.values(map).reduce((a, b) => a + b, 0);
+        if (diffDays <= 7) weekTotal += daySum;
+        if (diffDays <= 30) monthTotal += daySum;
+        Object.entries(map).forEach(([id, c]) => {
+          totalsByDhikr[id] = (totalsByDhikr[id] || 0) + c;
+        });
+      });
+
+      document.getElementById('statTodayCount').textContent = todayTotal.toLocaleString('tr-TR');
+      document.getElementById('statDailyPct').textContent = `%${dailyPct}`;
+      document.getElementById('statWeekTotal').textContent = weekTotal.toLocaleString('tr-TR');
+      document.getElementById('statMonthTotal').textContent = monthTotal.toLocaleString('tr-TR');
+
+      // 14-day streak calendar
+      let calHTML = '';
+      for (let i = 13; i >= 0; i--) {
+        const dt = new Date();
+        dt.setDate(dt.getDate() - i);
+        const k = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+        const m = state.logs[k] || {};
+        const s = Object.values(m).reduce((a, b) => a + b, 0);
+        const cls = s >= virdGoal ? 'done' : (s > 0 ? 'partial' : '');
+        calHTML += `<div class="cal-cell ${cls}">${dt.getDate()}</div>`;
+      }
+      document.getElementById('streakCalendar').innerHTML = calHTML;
+
+      // Weekly status
+      const weekDhikrs = DHIKRS.filter(d => d.cat === 'weekly');
+      document.getElementById('weeklyStatsList').innerHTML = weekDhikrs.map(w => {
+        const c = getTodayCount(w.id);
+        const t = getTarget(w);
+        return `<div style="display:flex; justify-content:space-between; font-size:0.82rem; padding:5px 0; border-bottom:1px solid var(--border);">
+          <span>${w.dayName}</span><strong>${c} / ${t}</strong>
+        </div>`;
+      }).join('');
+
+      // Top dhikrs
+      const sorted = Object.entries(totalsByDhikr).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      document.getElementById('topDhikrsList').innerHTML = sorted.length
+        ? sorted.map(([id, cnt]) => {
+            const item = DHIKRS.find(x => x.id === id);
+            return `<div style="display:flex; justify-content:space-between; font-size:0.82rem; padding:5px 0; border-bottom:1px solid var(--border);">
+              <span>${item ? item.title : id}</span><strong>${cnt.toLocaleString('tr-TR')}</strong>
+            </div>`;
+          }).join('')
+        : '<div style="font-size:0.82rem; color:var(--text-muted);">Henüz kayıtlı zikir bulunmuyor. Ana sayfadan bir zikre dokunarak başlayabilirsiniz.</div>';
+    }
+
+    function renderCatalog() {
+      const cats = [
+        { key: 'daily', label: 'Günlük Virdler (5 Temel Zikir)' },
+        { key: 'weekly', label: 'Haftanın Günlük Tesbihleri (7 Gün)' },
+        { key: 'extra', label: 'Günlük Virdlere Ek Tesbihler (7 Zikir)' },
+        { key: 'special', label: 'Özel Zikir' }
+      ];
+      document.getElementById('fullCatalogContainer').innerHTML = cats.map(c => {
+        const items = DHIKRS.filter(d => d.cat === c.key);
+        return `<div class="section-head"><h2>${c.label}</h2></div>` + items.map(createDhikrCardHTML).join('');
+      }).join('');
+    }
+
+    // Navigation & Settings
+    function switchTab(tab) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById(`view-${tab}`).classList.add('active');
+      document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+      if (tab === 'home') renderHome();
+      if (tab === 'stats') renderStats();
+      if (tab === 'list') renderCatalog();
+    }
+
+    function applySettingsToUI() {
+      document.documentElement.setAttribute('data-theme', state.settings.theme);
+      document.documentElement.style.setProperty('--font-scale', state.settings.fontScale);
+      document.getElementById('optSound').checked = state.settings.sound;
+      document.getElementById('optVibrate').checked = state.settings.vibrate;
+      document.getElementById('optTheme').value = state.settings.theme;
+      document.getElementById('optFontScale').value = String(state.settings.fontScale);
+      document.getElementById('morningTime').value = state.settings.morningTime;
+      document.getElementById('eveningTime').value = state.settings.eveningTime;
+    }
+
+    function saveSettings() {
+      state.settings.sound = document.getElementById('optSound').checked;
+      state.settings.vibrate = document.getElementById('optVibrate').checked;
+      state.settings.theme = document.getElementById('optTheme').value;
+      state.settings.fontScale = parseFloat(document.getElementById('optFontScale').value);
+      state.settings.morningTime = document.getElementById('morningTime').value;
+      state.settings.eveningTime = document.getElementById('eveningTime').value;
+      persistState();
+      applySettingsToUI();
+      showToast('Ayarlar kaydedildi.');
+    }
+
+    function requestNotifPermission() {
+      if (!('Notification' in window)) {
+        showToast('Tarayıcı bildirimleri desteklemiyor.');
+        return;
+      }
+      Notification.requestPermission().then(p => {
+        showToast(p === 'granted' ? 'Bildirim izni verildi.' : 'Bildirim izni reddedildi.');
+      });
+    }
+
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tanesi-yedek-${getTodayKey()}.json`;
+      a.click();
+      showToast('Yedek dosyası indirildi.');
+    }
+
+    function importBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          if (parsed.logs) {
+            state = { ...state, ...parsed };
+            persistState();
+            applySettingsToUI();
+            renderHome();
+            showToast('Yedek başarıyla geri yüklendi.');
+          }
+        } catch (err) {
+          showToast('Geçersiz yedek dosyası.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
+    loadState();
+    renderHome();
+  </script>
+</body>
+</html>

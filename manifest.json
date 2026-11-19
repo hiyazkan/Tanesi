@@ -1,0 +1,19 @@
+{
+  "name": "TANESİ – Zikir ve Tesbih Uygulaması",
+  "short_name": "TANESİ",
+  "description": "Geleneksel İslam sanatıyla modern dijital zikir ve tesbih uygulaması.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06452F",
+  "theme_color": "#06452F",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
